@@ -1,3 +1,4 @@
+const moment = require('moment/moment');
 const Class = require('../models/Class');
 
 // Get all classes
@@ -10,6 +11,17 @@ const getAllClass = async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   };
+
+  const getUpcomingClasses = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const currentDay = moment().format('dddd'); // Get the current day
+    const classes = await Class.find({ userId, day: currentDay }).sort({ time: 1 }); // Filter classes by userId and current day, and sort them by time
+    res.status(200).json(classes);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
   
 // Create a new class
 const createClass = async (req, res) => {
@@ -22,21 +34,6 @@ const createClass = async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   };
-  
-
-// Get a class by ID
-const getClassById = async (req, res) => {
-  try {
-    const classes = await Class.findById(req.params.id);
-    if (!classes) {
-      return res.status(404).json({ error: 'Class not found' });
-    }
-    res.status(200).json(classes);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
 // Update a class
 const updateClass = async (req, res) => {
   try {
@@ -68,4 +65,4 @@ const deleteClass = async (req, res) => {
 };
 
 
-module.exports = {getAllClass,getClassById,updateClass,deleteClass,createClass};
+module.exports = {getAllClass,updateClass,deleteClass,createClass,getUpcomingClasses};

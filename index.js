@@ -1,21 +1,16 @@
 const  express = require("express");
 const cors = require("cors");
-const helmet = require("helmet");
 const {CONNECTDB} = require("./DatabaseConnection/connection");
 const { ErrorHandler } = require("./ErrorHandler/ErrorHandler");
 const AuthRouter = require("./routers/Users");
 const ClassRouter = require("./routers/Class");
+const AssignmentRouter = require("./routers/Assignment");
 const app = express();
 
 //middlewares
 app.use(express.json());
 app.use(cors({origin:'*'}));
-app.use(helmet());
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    next();
-  });
 
 //database connection
 CONNECTDB("mongodb+srv://mbathi:shanicecole@cluster0.hex8l.mongodb.net/Student_Automation?retryWrites=true&w=majority");
@@ -23,9 +18,10 @@ CONNECTDB("mongodb+srv://mbathi:shanicecole@cluster0.hex8l.mongodb.net/Student_A
 //router 
 app.use('/api/auth',AuthRouter);
 app.use('/api/class',ClassRouter);
+app.use('/api/assignment',AssignmentRouter);
 
 app.get('/', (req,res)=>{
- res.send("the student automation api");
+ res.send("the student automation API");
 });
 
 //Error Handler

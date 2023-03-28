@@ -21,6 +21,10 @@ const classSchema = new mongoose.Schema({
   time: {
     type: String,
     required: true
+  },
+  day: {
+    type: String,
+    required: true
   }
 });
 
