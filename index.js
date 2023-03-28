@@ -21,7 +21,7 @@ app.use('/api/class',ClassRouter);
 app.use('/api/assignment',AssignmentRouter);
 
 app.get('/', (req,res)=>{
- res.send("the student automation API");
+ res.send("The student automation API");
 });
 
 //Error Handler
