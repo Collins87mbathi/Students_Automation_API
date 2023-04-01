@@ -7,9 +7,9 @@ const Register = async (req, res, next) => {
   try {
     const { fullname, email, password } = req.body;
     const user = await User.findOne({ email: email });
-    if (user) return next(ApiError.NotFound("This user already exists"));
+    if (user) return res.status(404).json("This user already exist");
     if (!fullname || !email || !password)
-      return next(ApiError.Required("Please input values"));
+      return res.status(404).json("please input values")
     if (!EmailValidator(email))
       return next(ApiError.BadRequest("Enter a valid email"));
     const savedUser = await User.create({
@@ -29,7 +29,8 @@ const Login = async (req, res, next) => {
     if (!req.body.email || !req.body.password)
       return next(ApiError.NotFound("Please input values"));
     const user = await User.findOne({ email: req.body.email });
-    if (!user) return next(ApiError.NotFound("This user does not exist"));
+    // if (!user) return next(ApiError.NotFound("This user does not exist"));
+    if (!user) return res.status(401).json("This user does not exist")
     const isMatch = await user.matchPassword(req.body.password);
     if (!isMatch) return res.status(404).json("Please input password");
     const token = jwt.sign(
