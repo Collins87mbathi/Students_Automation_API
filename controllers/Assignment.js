@@ -1,4 +1,9 @@
 const Assignment = require("../models/Assignment");
+const twilio = require('twilio');
+const cron = require('node-cron');
+const accountSid = 'AC2bfe4bf126f9f98cf620f73959563da6';
+const authToken = '151c47aeccba0898f23afb73cde2bc7e';
+const client = twilio(accountSid, authToken);
 
 
 const assignmentController = {
@@ -8,11 +13,32 @@ const assignmentController = {
         const assignment = new Assignment(req.body);
         assignment.userId = req.user.id;
         await assignment.save();
+    
+        // Schedule an SMS to be sent 3 hours before the due date of the assignment
+        const dueDate = new Date(assignment.dueDate);
+        const reminderDate = new Date(dueDate.getTime() - 3 * 60 * 60 * 1000);
+        
+        const body = `Reminder: You have an assignment due in 3 hours. Assignment name: ${assignment.name}. Due date: ${assignment.dueDate}.`;
+        cron.schedule(reminderDate, async () => {
+          try {
+            // Send the SMS notification using Twilio
+            await client.messages.create({
+              body: body,
+              from: "+15855361346",
+              to: '+254791686851'
+            });
+            console.log(`SMS sent for class: ${title}`);
+          } catch (error) {
+            console.log(`Failed to send SMS for class: ${title}. Error: ${error}`);
+          }
+        });
+    
         res.status(201).json(assignment);
       } catch (error) {
         res.status(400).json({ error: error.message });
       }
     },
+    
   
     // Get all assignments
     getAll: async (req, res) => {

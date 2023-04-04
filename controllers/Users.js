@@ -11,7 +11,8 @@ const Register = async (req, res, next) => {
     if (!fullname || !email || !password)
       return res.status(404).json("please input values")
     if (!EmailValidator(email))
-      return next(ApiError.BadRequest("Enter a valid email"));
+      // return next(ApiError.BadRequest("Enter a valid email"));
+      return res.status(401).json("Enter a valid email");
     const savedUser = await User.create({
       fullname,
       email,
@@ -27,12 +28,11 @@ const Register = async (req, res, next) => {
 const Login = async (req, res, next) => {
   try {
     if (!req.body.email || !req.body.password)
-      return next(ApiError.NotFound("Please input values"));
+      return res.status(400).json("Please input values");
     const user = await User.findOne({ email: req.body.email });
-    // if (!user) return next(ApiError.NotFound("This user does not exist"));
     if (!user) return res.status(401).json("This user does not exist")
     const isMatch = await user.matchPassword(req.body.password);
-    if (!isMatch) return res.status(404).json("Please input password");
+    if (!isMatch) return res.status(404).json("wrong password");
     const token = jwt.sign(
       { id: user._id, email: user.email },
       "elie"

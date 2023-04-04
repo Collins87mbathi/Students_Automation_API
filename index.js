@@ -4,6 +4,8 @@ const {CONNECTDB} = require("./DatabaseConnection/connection");
 const { ErrorHandler } = require("./ErrorHandler/ErrorHandler");
 const AuthRouter = require("./routers/Users");
 const ClassRouter = require("./routers/Class");
+const cron = require("node-cron");
+const {getUpcomingClasses} = require("./controllers/Class");
 const AssignmentRouter = require("./routers/Assignment");
 const app = express();
 
@@ -15,6 +17,8 @@ app.use(cors({origin:'*'}));
 //database connection
 CONNECTDB("mongodb+srv://mbathi:shanicecole@cluster0.hex8l.mongodb.net/Student_Automation?retryWrites=true&w=majority");
 
+ // Schedule the execution of getUpcomingClasses function everyday at 6:30 AM
+ 
 //router 
 app.use('/api/auth',AuthRouter);
 app.use('/api/class',ClassRouter);
@@ -23,6 +27,7 @@ app.use('/api/assignment',AssignmentRouter);
 app.get('/', (req,res)=>{
  res.send("The student automation API");
 });
+
 
 //Error Handler
 app.use(ErrorHandler);
