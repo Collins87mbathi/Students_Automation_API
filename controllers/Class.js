@@ -10,8 +10,8 @@ const client = twilio(accountSid, authToken);
 // Get all classes
 const getAllClass = async (req, res) => {
     try {
-      const userId = req.user.id; // Get the userId from the middleware
-      const classes = await Class.find({ userId }); // Filter classes by userId
+      const userId = req.user.id;
+      const classes = await Class.find({ userId }); 
       res.status(200).json(classes);
     } catch (err) {
       res.status(500).json({ error: err.message });
@@ -29,7 +29,7 @@ const getAllClass = async (req, res) => {
         cron.schedule('30 8 * * *',(async ()=>{
           const message = `You have a class on ${currentDay} at ${time}. The class is ${title} and your lecturer is ${lecturer}.`;
           try {
-            // Send the SMS notification using Twilio
+        
             await client.messages.create({
               body: message,
               from: "+15855361346",
@@ -47,6 +47,20 @@ const getAllClass = async (req, res) => {
     }
   };
   
+// Create multiple classes
+const createClasses = async (req, res) => {
+  try {
+    const classes = req.body;
+    classes.forEach((c) => {
+      c.userId = req.user.id;
+    });
+    const savedClasses = await Class.insertMany(classes);
+
+    res.status(201).json(savedClasses);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
   
   
@@ -54,7 +68,7 @@ const getAllClass = async (req, res) => {
 const createClass = async (req, res) => {
     try {
       const classes = new Class(req.body);
-      classes.userId = req.user.id; // Add userId to the classes object
+      classes.userId = req.user.id; 
       await classes.save();
       res.status(201).json(classes);
     } catch (err) {
@@ -92,4 +106,4 @@ const deleteClass = async (req, res) => {
 };
 
 
-module.exports = {getAllClass,updateClass,deleteClass,createClass,getUpcomingClasses};
+module.exports = {getAllClass,updateClass,deleteClass,createClass,createClasses,getUpcomingClasses};

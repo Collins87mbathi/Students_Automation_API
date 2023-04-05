@@ -4,8 +4,7 @@ const {CONNECTDB} = require("./DatabaseConnection/connection");
 const { ErrorHandler } = require("./ErrorHandler/ErrorHandler");
 const AuthRouter = require("./routers/Users");
 const ClassRouter = require("./routers/Class");
-const cron = require("node-cron");
-const {getUpcomingClasses} = require("./controllers/Class");
+const PerformanceRouter = require('./routers/Performance');
 const AssignmentRouter = require("./routers/Assignment");
 const app = express();
 
@@ -23,6 +22,7 @@ CONNECTDB("mongodb+srv://mbathi:shanicecole@cluster0.hex8l.mongodb.net/Student_A
 app.use('/api/auth',AuthRouter);
 app.use('/api/class',ClassRouter);
 app.use('/api/assignment',AssignmentRouter);
+app.use('/api/performance',PerformanceRouter);
 
 app.get('/', (req,res)=>{
  res.send("The student automation API");
