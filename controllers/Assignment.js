@@ -19,7 +19,7 @@ const assignmentController = {
         const reminderDate = new Date(dueDate.getTime() - 3 * 60 * 60 * 1000);
         
         const body = `Reminder: You have an assignment due in 3 hours. Assignment name: ${assignment.name}. Due date: ${assignment.dueDate}.`;
-        cron.schedule(reminderDate, async () => {
+        cron.schedule('30 8 * * *', async () => {
           try {
             // Send the SMS notification using Twilio
             await client.messages.create({
@@ -35,7 +35,8 @@ const assignmentController = {
     
         res.status(201).json(assignment);
       } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).json(error.message );
+        console.log(error)
       }
     },
     

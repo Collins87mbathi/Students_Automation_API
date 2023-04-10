@@ -33,6 +33,6 @@ app.get('/', (req,res)=>{
 app.use(ErrorHandler);
 
 //port listening
-app.listen(5000,()=>{
-console.log(`server is listening at ${5000}`);
+app.listen(5001,()=>{
+console.log(`server is listening at ${5001}`);
 });
