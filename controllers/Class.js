@@ -1,10 +1,5 @@
 const moment = require('moment/moment');
 const Class = require('../models/Class');
-const twilio = require('twilio');
-const cron = require('node-cron');
-const accountSid = 'AC2bfe4bf126f9f98cf620f73959563da6';
-const authToken = '151c47aeccba0898f23afb73cde2bc7e';
-const client = twilio(accountSid, authToken);
 
 
 // Get all classes
@@ -58,6 +53,7 @@ const createClasses = async (req, res) => {
 
     res.status(201).json(savedClasses);
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: err.message });
   }
 };
