@@ -8,6 +8,7 @@ const PerformanceRouter = require('./routers/Performance');
 const AssignmentRouter = require("./routers/Assignment");
 const twilio = require('twilio');
 const cron = require('node-cron');
+const helmet = require("helmet");
 const Assignment = require("./models/Assignment");
 const moment = require('moment/moment');
 const Class = require("./models/Class");
@@ -21,6 +22,7 @@ const app = express();
 //middlewares
 app.use(express.json());
 app.use(cors({origin:'*'}));
+app.use(helmet());
 //database connection
 CONNECTDB("mongodb+srv://mbathi:shanicecole@cluster0.hex8l.mongodb.net/Student_Automation?retryWrites=true&w=majority");
 
